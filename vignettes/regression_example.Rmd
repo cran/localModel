@@ -1,0 +1,77 @@
+---
+title: "Introduction to localModel package"
+author: "Mateusz Staniak"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to localModel package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  message = FALSE,
+  warning = FALSE,
+  error = FALSE
+)
+```
+
+This vignette shows how [`localModel`](https://github.com/ModelOriented/localModel) package can be used to explain regression models.
+We will use the `apartments` dataset from [`DALEX2`](https://github.com/ModelOriented/DALEX2) package.
+For more information about the dataset, please refer to the [Gentle introduction to DALEX](https://pbiecek.github.io/DALEX_docs/).
+
+We will need [`localModel`](https://github.com/ModelOriented/localModel) and [`DALEX2`](https://github.com/ModelOriented/DALEX2) packages.
+Random forest from `randomForest` package will serve as an example model, and linear regression as a simple model for comparison.
+
+```{r pkgs}
+library(DALEX)
+library(localModel)
+library(randomForest)
+data('apartments')
+data('apartments_test')
+set.seed(69)
+mrf <- randomForest(m2.price ~., data = apartments, ntree = 50)
+mlm <- lm(m2.price ~., data = apartments)
+```
+
+
+First, we need to create an explainer object, using the `explain` function.
+We will explain the prediction for fifth observation in the test dataset.
+
+```{r model}
+explainer <- DALEX::explain(model = mrf,
+                     data = apartments_test[, -1])
+explainer2 <- DALEX::explain(model = mlm, 
+                      data = apartments_test[, -1])
+new_observation <- apartments_test[5, -1]
+new_observation
+```
+
+Local explanation is created via `individual_surrogate_model` function, which takes the explainer, observation of interest and number of new observations to simulate as argument. Optionally, we can set seed using the `seed` parameter for reproducibility.
+
+```{r explanation}
+model_lok <- individual_surrogate_model(explainer, new_observation,
+                                        size = 500, seed = 17)
+model_lok2 <- individual_surrogate_model(explainer2, new_observation,
+                                         size = 500, seed = 17)
+```
+
+First, local interpretable features are created. Numerical features are discretized by using decision tree to model relationship between the feature and the corresponding Ceteris Paribus profile.
+Categorical features are also discretized by merging levels using the marginal relationship between the feature and the model response.
+Then, new dataset is simulated by switching a random number of interpretable inputs in the explained instance.
+This procedure mimics "graying out" areas (superpixels) in the original LIME method.
+LASSO regression model is fitted to the model response for these new observations, which makes the final explanations sparse and thus readable.
+More details can be found in the _Methodology behind localModel package_ vignette.
+
+The explanation can be plotted using generic `plot` function.
+The plot shows interpretable features and weights associated with them, starting at the model intercept.
+Negative weights are associated with features that decrease the apartment price, while positive weights increase it. 
+We can plot explanation for two or more models together by passing several local explainer to `plot` function.
+
+```{r plot}
+plot(model_lok, model_lok2)
+```
+
+We can see that for this observation, the price predicted by Random Forest is negatively influeced mostly by the district and construction year, while linear regression ignores the effect of construction year.

@@ -1,0 +1,55 @@
+---
+title: "Explaining classification models with localModel package"
+author: "Mateusz Staniak"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Explaining classification models with localModel package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE,
+  error = FALSE
+)
+```
+
+Explaining classification models with the [`localModel`](https://github.com/ModelOriented/localModel) package is just as simple as explaining regression.
+It is enough to work with predicted scores (class probabilities) rather than classes. 
+In multiclass setting, a separate explanation is provided for each class probability.
+
+We will work with the `HR` dataset from [`DALEX2`](https://github.com/ModelOriented/DALEX2) package.
+As in the regression example from _Introduction to the localModel package_, we will first create a random forest model and a [`DALEX2`](https://github.com/ModelOriented/DALEX2) explainer.
+Details about the method can be found in the _Methodology behind localModel package_ vignette.
+
+```{r model}
+library(DALEX)
+library(randomForest)
+library(localModel)
+
+data('HR')
+
+set.seed(17)
+mrf <- randomForest(status ~., data = HR, ntree = 100)
+explainer <- explain(mrf, 
+                     HR[, -6],
+                     predict_function = function(x, y) predict(x, y, type = "prob"))
+new_observation <- HR[10, -6]
+new_observation
+```
+
+In [`DALEX2`](https://github.com/ModelOriented/DALEX2), we have built-in predict functions for some types of models. Random Forest is among these models.
+
+```{r explanation}
+model_lok <- individual_surrogate_model(explainer, new_observation, 
+                                        size = 500, seed = 17)
+plot(model_lok)
+plot(model_lok, geom = "bar")
+```
+
+The plot shows how predictions for different classes are influenced by different features.
+For the actually predicted class, hours and evaluation have a strong positive effect.
