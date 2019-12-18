@@ -1,4 +1,4 @@
-## ----setup, include = FALSE----------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -7,7 +7,7 @@ knitr::opts_chunk$set(
   error = FALSE
 )
 
-## ----model---------------------------------------------------------------
+## ----model--------------------------------------------------------------------
 library(DALEX)
 library(randomForest)
 library(localModel)
@@ -22,7 +22,7 @@ explainer <- explain(mrf,
 new_observation <- HR[10, -6]
 new_observation
 
-## ----explanation---------------------------------------------------------
+## ----explanation--------------------------------------------------------------
 model_lok <- individual_surrogate_model(explainer, new_observation, 
                                         size = 500, seed = 17)
 plot(model_lok)

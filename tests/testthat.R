@@ -9,8 +9,8 @@ data('apartments')
 m_rf_hr <- randomForest(status ~., data = HR[1:500, ], ntree = 10)
 m_rf_ap <- randomForest(m2.price ~., data = apartments[1:500, ], ntree = 10)
 
-hr_explainer <- explain(m_rf_hr, HR[1:500, ])
-ap_explainer <- explain(m_rf_ap, apartments[1:500, ])
+hr_explainer <- suppressWarnings(explain(m_rf_hr, HR[1:500, ], verbose = FALSE)) 
+ap_explainer <- explain(m_rf_ap, apartments[1:500, ], verbose = FALSE)
 
 local_model_explainer_hr <- individual_surrogate_model(hr_explainer,
                                                        HR[5, -6],

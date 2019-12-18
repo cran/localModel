@@ -1,4 +1,4 @@
-calculate_weights <- function(simulated_dataset, new_observation, kernel) {
+  calculate_weights <- function(simulated_dataset, new_observation, kernel) {
   for_weights_x <- rbind(simulated_dataset, new_observation)
   for_weights <- cbind(y = 1, for_weights_x)
 

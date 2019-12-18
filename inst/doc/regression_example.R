@@ -1,4 +1,4 @@
-## ----setup, include = FALSE----------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -7,7 +7,7 @@ knitr::opts_chunk$set(
   error = FALSE
 )
 
-## ----pkgs----------------------------------------------------------------
+## ----pkgs---------------------------------------------------------------------
 library(DALEX)
 library(localModel)
 library(randomForest)
@@ -17,7 +17,7 @@ set.seed(69)
 mrf <- randomForest(m2.price ~., data = apartments, ntree = 50)
 mlm <- lm(m2.price ~., data = apartments)
 
-## ----model---------------------------------------------------------------
+## ----model--------------------------------------------------------------------
 explainer <- DALEX::explain(model = mrf,
                      data = apartments_test[, -1])
 explainer2 <- DALEX::explain(model = mlm, 
@@ -25,12 +25,12 @@ explainer2 <- DALEX::explain(model = mlm,
 new_observation <- apartments_test[5, -1]
 new_observation
 
-## ----explanation---------------------------------------------------------
+## ----explanation--------------------------------------------------------------
 model_lok <- individual_surrogate_model(explainer, new_observation,
                                         size = 500, seed = 17)
 model_lok2 <- individual_surrogate_model(explainer2, new_observation,
                                          size = 500, seed = 17)
 
-## ----plot----------------------------------------------------------------
+## ----plot---------------------------------------------------------------------
 plot(model_lok, model_lok2)
 

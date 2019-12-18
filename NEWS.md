@@ -1,3 +1,7 @@
+# localModel 0.3.12 
+
+* Fixes problems in tests.
+
 # localModel 0.3.11
 
 * Changes dependencies: `DALEX2` to `DALEX`, `ceterisParibus2` to `ingredients`.
