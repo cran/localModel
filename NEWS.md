@@ -1,6 +1,17 @@
-# localModel 0.3.12 
+# localModel 0.5
 
-* Fixes problems in tests.
+* `predict_surrogate` function is added to provide easier interface of accessing lime/iml/localModel implementations of the LIME method. (this function wes moved to `DALEXtra`)
+
+# localModel 0.4.1
+
+* Fixes the bug in handling the case where all extracted variables are constant
+* Changed default theme for plots, more consistent with other DrWhy packages
+
+# localModel 0.4.0
+
+* Add `plot_interpretable_feature` function to plot discretizations.
+* Fixes bugs related to feature extraction.
+* Changes the method of sampling new observations (features to permute are chosen from Beroulli distribution).
 
 # localModel 0.3.11
 

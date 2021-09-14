@@ -11,7 +11,7 @@ individual_surrogate_model(
   seed = NULL,
   kernel = identity_kernel,
   sampling = "uniform",
-  grid_points = 101
+  ...
 )
 }
 \arguments{
@@ -27,7 +27,7 @@ individual_surrogate_model(
 
 \item{sampling}{Parameter that controls sampling while creating new observations.}
 
-\item{grid_points}{Number of points to use while calculating Ceteris Paribus profiles.}
+\item{...}{Additional arguments that will be passed to ingredients::ceteris_paribus.}
 }
 \value{
 data.frame of class local_surrogate_explainer

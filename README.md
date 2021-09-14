@@ -5,11 +5,19 @@
 [![Coverage Status](https://img.shields.io/codecov/c/github/ModelOriented/localModel/master.svg)](https://codecov.io/github/ModelOriented/localModel?branch=master)
 
 
-`localModel` is a successor to the [`live`](https://github.com/MI2DataLab/live) package. It implements a variant of LIME method for explaining single predictions of black box machine learning models for tabular data.
+`localModel` is a successor to the `live` package. It implements a variant of LIME method for explaining single predictions of black box machine learning models for tabular data.
 Interpretable features are created based on [Ceteris Paribus](https://github.com/ModelOriented/ceterisParibus2) plots.
 Details of the methodology are described in the vignette.
+`localModel` is currently undergoing rapid changes, including bug fixes, for a stable solution please see the `live` package. 
 
-To get started, install the newest version from GitHub by using the code below. 
+To get started, install the package from CRAN:
+
+```
+install.packages('localModel')
+```
+
+
+The development version can be installe from GitHub by using the code below. 
 Please do not use the `devtools` package, since it is affected [a bug](https://github.com/r-lib/devtools/issues/1900) which makes `localModel` installation impossible.
 This issue was solved in the Github version of `remotes`.
 
